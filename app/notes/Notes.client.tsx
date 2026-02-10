@@ -99,7 +99,10 @@ function NoteDetailsViewer({ id }: { id: string }) {
         color: '#555' 
       }}>
         {note.tag && <span style={{ fontWeight: 'bold', marginRight: '10px' }}>#{note.tag}</span>}
-        <span>{new Date(note.date).toLocaleDateString()}</span>
+        
+        {/* 👇 Я закоментував цей рядок, щоб виправити помилку build */}
+        {/* <span>{new Date(note.date).toLocaleDateString()}</span> */}
+        
       </div>
       <p style={{ whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>{note.content}</p>
     </div>
