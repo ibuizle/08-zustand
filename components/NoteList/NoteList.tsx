@@ -5,14 +5,15 @@ import s from './NoteList.module.css';
 
 interface NoteListProps {
   notes: NoteType[];
+  onDetailClick: (id: string) => void;
 }
 
-const NoteList: React.FC<NoteListProps> = ({ notes }) => {
+const NoteList: React.FC<NoteListProps> = ({ notes, onDetailClick }) => {
   return (
     <ul className={s.list}>
       {notes.map((note) => (
         <li key={note.id} className={s.listItem}>
-           <Note note={note} />
+           <Note note={note} onDetailClick={onDetailClick} />
         </li>
       ))}
     </ul>

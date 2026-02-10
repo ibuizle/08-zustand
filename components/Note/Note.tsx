@@ -2,20 +2,20 @@
 
 import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import Link from 'next/link';
 import { deleteNote } from '@/lib/api';
 import { Note as NoteType } from '@/types/note';
 import s from './Note.module.css';
 
 interface NoteProps {
   note: NoteType;
+  onDetailClick: (id: string) => void;
 }
 
-const Note: React.FC<NoteProps> = ({ note }) => {
+const Note: React.FC<NoteProps> = ({ note, onDetailClick }) => {
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: deleteNote,
+    mutationFn: (id: string) => deleteNote(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });
     },
@@ -34,9 +34,13 @@ const Note: React.FC<NoteProps> = ({ note }) => {
         <span className={s.tag}>{note.tag}</span>
         
         <div className={s.actions}>
-           <Link href={`/notes/${note.id}`} className={s.link}>
+           <button 
+             className={s.link} 
+             onClick={() => onDetailClick(note.id)}
+             type="button"
+           >
              View details
-           </Link>
+           </button>
 
            <button 
              className={s.button}
