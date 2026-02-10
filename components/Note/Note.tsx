@@ -4,7 +4,9 @@ import React from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteNote } from '@/lib/api';
 import { Note as NoteType } from '@/types/note';
-import s from './Note.module.css';
+
+// 👇 ОСЬ ГОЛОВНА ЗМІНА: Імпортуємо стилі з папки NoteList
+import s from '../NoteList/NoteList.module.css';
 
 interface NoteProps {
   note: NoteType;
@@ -26,14 +28,16 @@ const Note: React.FC<NoteProps> = ({ note, onDetailClick }) => {
   });
 
   return (
-    <div className={s.card}>
+    // 👇 Використовуємо фрагмент <>, бо рамка і тінь вже є у батьківського <li> в NoteList
+    <> 
       <h3 className={s.title}>{note.title}</h3>
       <p className={s.content}>{note.content}</p>
       
       <div className={s.footer}>
         <span className={s.tag}>{note.tag}</span>
         
-        <div className={s.actions}>
+        <div style={{ display: 'flex', gap: '8px' }}>
+           {/* 👇 Кнопка View Details (синя) */}
            <button 
              className={s.link} 
              onClick={() => onDetailClick(note.id)}
@@ -42,6 +46,7 @@ const Note: React.FC<NoteProps> = ({ note, onDetailClick }) => {
              View details
            </button>
 
+           {/* 👇 Кнопка Delete (червона) */}
            <button 
              className={s.button}
              onClick={() => mutate(note.id)} 
@@ -52,7 +57,7 @@ const Note: React.FC<NoteProps> = ({ note, onDetailClick }) => {
            </button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

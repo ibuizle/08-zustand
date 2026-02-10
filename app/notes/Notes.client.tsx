@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useDebouncedCallback } from 'use-debounce';
-import { fetchNotes, fetchNoteById } from '@/lib/api'; // 👈 Додав fetchNoteById
+import { fetchNotes, fetchNoteById } from '@/lib/api';
 import NoteList from '@/components/NoteList/NoteList';
 import Pagination from '@/components/Pagination/Pagination';
 import SearchBox from '@/components/SearchBox/SearchBox';
@@ -17,10 +17,8 @@ export default function NotesClient() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   
-  // 👇 Стейт для модалки СТВОРЕННЯ
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   
-  // 👇 Стейт для модалки ПЕРЕГЛЯДУ (зберігає ID або null)
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
 
   const handleSearch = useDebouncedCallback((value: string) => {
@@ -50,7 +48,6 @@ export default function NotesClient() {
       {isLoading && <p>Loading...</p>}
       
       {data && data.notes.length > 0 ? (
-        // 👇 Передаємо функцію setSelectedNoteId у список
         <NoteList 
           notes={data.notes} 
           onDetailClick={(id) => setSelectedNoteId(id)} 
@@ -67,14 +64,12 @@ export default function NotesClient() {
         />
       )}
 
-      {/* Модалка СТВОРЕННЯ */}
       {isCreateModalOpen && (
         <Modal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)}>
           <NoteForm onClose={() => setIsCreateModalOpen(false)} />
         </Modal>
       )}
 
-      {/* 👇 Модалка ПЕРЕГЛЯДУ (нова) */}
       {selectedNoteId && (
         <Modal isOpen={!!selectedNoteId} onClose={() => setSelectedNoteId(null)}>
           <NoteDetailsViewer id={selectedNoteId} />
@@ -84,7 +79,6 @@ export default function NotesClient() {
   );
 }
 
-// 👇 Міні-компонент для відображення деталей нотатки всередині модалки
 function NoteDetailsViewer({ id }: { id: string }) {
   const { data: note, isLoading, isError } = useQuery({
     queryKey: ['note', id],
