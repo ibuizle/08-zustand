@@ -3,13 +3,17 @@ import { fetchNoteById } from '@/lib/api';
 import NoteDetailsClient from './NoteDetails.client';
 
 interface Props {
-  params: {
+  // 👇 Обов'язкова вимога Next.js 15: params має бути Promise
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default async function NoteDetailsPage({ params }: Props) {
+export default async function NoteDetailsPage(props: Props) {
   const queryClient = new QueryClient();
+  
+  // 👇 Отримуємо параметри через await відповідно до фідбеку
+  const params = await props.params;
   const { id } = params;
 
   await queryClient.prefetchQuery({

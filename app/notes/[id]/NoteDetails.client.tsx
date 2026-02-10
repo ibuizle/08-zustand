@@ -12,19 +12,17 @@ export default function NoteDetailsClient() {
   const { data: note, isLoading, error } = useQuery({
     queryKey: ['note', id],
     queryFn: () => fetchNoteById(id),
+    refetchOnMount: false,
   });
 
   if (isLoading) {
-    // Текст за ТЗ
     return <p>Loading, please wait...</p>;
   }
 
   if (error || !note) {
-    // Текст за ТЗ
     return <p>Something went wrong.</p>;
   }
 
-  // Розмітка за ТЗ
   return (
     <div className={css.container}>
       <div className={css.item}>
