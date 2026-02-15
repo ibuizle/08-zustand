@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchNoteById } from '@/lib/api';
 
 import Modal from '@/components/Modal/Modal';
-import css from './NotePreview.module.css';
 
 interface NotePreviewProps {
   id: string;
@@ -26,25 +25,14 @@ export default function NotePreview({ id }: NotePreviewProps) {
 
   return (
     <Modal isOpen onClose={handleClose}>
-      {isLoading && (
-        <div className={css.container}>
-          <p>Loading note...</p>
-        </div>
-      )}
+      {isLoading && <p>Loading note...</p>}
 
-      {isError && (
-        <div className={css.container}>
-          <p>Failed to load note.</p>
-        </div>
-      )}
+      {isError && <p>Failed to load note.</p>}
 
       {!isLoading && !isError && data && (
-        <div
-          className={css.container}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <h2 className={css.title}>{data.title}</h2>
-          <p className={css.content}>{data.content}</p>
+        <div onClick={(e) => e.stopPropagation()}>
+          <h2>{data.title}</h2>
+          <p>{data.content}</p>
         </div>
       )}
     </Modal>
