@@ -3,9 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { fetchNoteById } from '@/lib/api';
-// Імпорт стилів з правильних папок
-import sModal from '@/components/Modal/Modal.module.css'; //
-import sDetails from './NoteDetails.module.css'; // (має лежати поруч)
+
+import Modal from '@/components/Modal/Modal';
+import css from './NotePreview.module.css';
 
 interface NotePreviewProps {
   id: string;
@@ -14,36 +14,39 @@ interface NotePreviewProps {
 export default function NotePreview({ id }: NotePreviewProps) {
   const router = useRouter();
 
-  const { data: note, isLoading } = useQuery({
-    refetchOnMount: false,
-    queryKey: ['note', id],
-    queryFn: () => fetchNoteById(id),
-  });
-
   const handleClose = () => {
     router.back();
   };
 
-  if (isLoading) return null;
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['note', id],
+    queryFn: () => fetchNoteById(id),
+    refetchOnMount: false,
+  });
 
   return (
-    <div className={sModal.backdrop} onClick={handleClose}>
-      <div className={sModal.modal} onClick={(e) => e.stopPropagation()}>
-        {note ? (
-          <div className={sDetails.item}>
-            <div className={sDetails.header}>
-              <h2>{note.title}</h2>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-               <span className={sDetails.tag}>#{note.tag}</span>
-               <span className={sDetails.date}>{note.createdAt}</span> 
-            </div>
-            <p className={sDetails.content}>{note.content}</p>
-          </div>
-        ) : (
-          <p>Note not found</p>
-        )}
-      </div>
-    </div>
+    <Modal isOpen onClose={handleClose}>
+      {isLoading && (
+        <div className={css.container}>
+          <p>Loading note...</p>
+        </div>
+      )}
+
+      {isError && (
+        <div className={css.container}>
+          <p>Failed to load note.</p>
+        </div>
+      )}
+
+      {!isLoading && !isError && data && (
+        <div
+          className={css.container}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <h2 className={css.title}>{data.title}</h2>
+          <p className={css.content}>{data.content}</p>
+        </div>
+      )}
+    </Modal>
   );
 }
