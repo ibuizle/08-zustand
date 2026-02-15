@@ -1,17 +1,13 @@
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 import { fetchNotes } from '@/lib/api';
-import NotesClient from '@/app/notes/Notes.client';
+import NotesClient from './Notes.client';
 
 interface Props {
-  params: Promise<{
-    tag: string[];
-  }>;
+  params: { slug?: string[] };
 }
 
 export default async function FilteredNotesPage({ params }: Props) {
-  const resolvedParams = await params;
-  // Оскільки це [...tag], тут завжди щось буде. Беремо перший елемент.
-  const tag = resolvedParams.tag[0];
+  const tag = params.slug?.[0] ?? 'all';
 
   const queryClient = new QueryClient();
 

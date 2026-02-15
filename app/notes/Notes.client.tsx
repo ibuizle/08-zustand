@@ -1,23 +1,17 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useDebouncedCallback } from 'use-debounce';
 import { fetchNotes } from '@/lib/api';
 import NoteList from '@/components/NoteList/NoteList';
 import Pagination from '@/components/Pagination/Pagination';
 import SearchBox from '@/components/SearchBox/SearchBox';
-import css from '@/app/notes/NotesPage.module.css';
+import css from './NotesPage.module.css';
 
-interface Props {
-  initialTag: string;
-}
-
-export default function NotesClient({ initialTag }: Props) {
+export default function NotesClient() {
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState('');
-
-  const tag = useMemo(() => initialTag ?? 'all', [initialTag]);
 
   const debouncedSearch = useDebouncedCallback((value: string) => {
     setCurrentPage(1);
@@ -25,20 +19,15 @@ export default function NotesClient({ initialTag }: Props) {
   }, 500);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['notes', currentPage, search, tag],
+    queryKey: ['notes', currentPage, search],
     queryFn: () =>
       fetchNotes({
         page: currentPage,
         perPage: 12,
         search,
-        tag,
       }),
     staleTime: 1000 * 60,
   });
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [tag]);
 
   if (isLoading) return <p>Loading...</p>;
   if (isError || !data) return <p>Error loading notes</p>;
