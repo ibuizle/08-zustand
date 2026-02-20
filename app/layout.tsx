@@ -1,38 +1,37 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import Header from "@/components/Header/Header";
-import Footer from "@/components/Footer/Footer";
-import TanStackProvider from "@/components/TanStackProvider/TanStackProvider";
+import './globals.css';
+import type { Metadata } from 'next';
+import { Roboto } from 'next/font/google';
 
-const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto',
+});
 
 export const metadata: Metadata = {
-  title: "NoteHub",
-  description: "Manage your personal notes",
+  title: 'NoteHub',
+  description: 'NoteHub — modern note management app for creating and organizing your notes.',
+  openGraph: {
+    title: 'NoteHub',
+    description: 'NoteHub — modern note management app for creating and organizing your notes.',
+    url: 'https://notehub.app',
+    images: [
+      {
+        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
   children,
-  modal, // Додаємо цей проп для паралельного маршруту модалки
-}: Readonly<{
+}: {
   children: React.ReactNode;
-  modal: React.ReactNode; // Типізуємо слот модалки
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <TanStackProvider>
-          <Header />
-          {/* Основний контент сторінки */}
-          {children}
-          
-          {/* Слот для модального вікна (Intercepted Route) */}
-          {modal}
-          
-          <Footer />
-        </TanStackProvider>
-      </body>
+      <body className={roboto.variable}>{children}</body>
     </html>
   );
 }
